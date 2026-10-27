@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Fintech Dashboard{% endblock %}</title>
+    <!-- Tailwind CSS Play CDN voor directe styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Fintech Header -->
+    <header class="bg-slate-950 border-b border-slate-800 px-6 py-4 flex justify-between items-center shadow-md">
+        <div>
+            <a href="{% url 'home' %}" class="text-xl font-bold tracking-tight text-blue-400 hover:text-blue-300 transition">
+                FinTech<span class="text-slate-100">OS</span>
+            </a>
+        </div>
+        <div class="flex items-center space-x-4 text-sm font-medium">
+            {% if user.is_authenticated %}
+                <span class="text-slate-400">Welcome, <strong class="text-slate-200">{{ user.username }}</strong></span>
+                <a href="{% url 'logout' %}" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                    Log out
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="text-slate-300 hover:text-white transition">Inloggen</a>
+                <a href="{% url 'register' %}" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg shadow-sm transition">
+                    Register
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-8">
+        <!-- Django Flash Messages -->
+        {% if messages %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                    <div class="p-4 rounded-lg border {% if message.tags == 'error' %}bg-red-950/50 border-red-800 text-red-200{% else %}bg-emerald-950/50 border-emerald-800 text-emerald-200{% endif %} text-sm">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Pagina-inhoud blok -->
+        <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-xs text-slate-500 border-t border-slate-800/80">
+        &copy; 2026 FinTech Dashboard. All rights reserved.
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Uitgelogd - FinTechOS{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto py-12 text-center">
+    <div class="bg-slate-900/40 border border-slate-700/60 rounded-2xl p-8 shadow-2xl">
+        <h1 class="text-2xl font-bold tracking-tight text-white mb-2">You are logged out</h1>
+        <p class="text-sm text-slate-400 mb-6">Your session has been successfully terminated. See you next time!</p>
+        
+        <div class="space-y-3">
+            <!-- Gecorrigeerde url tag -->
+            <a href="{% url 'login' %}" class="block w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition duration-200">
+                Opnieuw inloggen
+            </a>
+            <a href="{% url 'home' %}" class="block w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2.5 px-4 rounded-lg border border-slate-700 transition duration-200">
+                Terug naar home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

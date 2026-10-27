@@ -1,0 +1,17 @@
+# Virtuele omgeving
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Omgevingsvariabelen & geheimen (Cruciaal voor je DB wachtwoord!)
+.env
+
+
+# Django specifieke mappen (optioneel, handig voor later)
+media/
+staticfiles/
