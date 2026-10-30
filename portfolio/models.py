@@ -1,5 +1,7 @@
+from decimal import Decimal
 from django.db import models
 from django.conf import settings
+from stock.models import Stock
 
 # Create your models here.
 
@@ -24,13 +26,38 @@ class Transaction(models.Model):
     def __str__(self):
         return f"{self.transaction_type} {self.quantity} of {self.asset.name} at {self.price_per_unit}"
 
-class DailyPortfolioValue(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date = models.DateField()
-    total_value = models.DecimalField(max_digits=20, decimal_places=2)
-
-    class Meta:
-        unique_together = ('user', 'date')
+class UserPortfolio(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='portfolios')
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name='portfolios')
+    quantity = models.DecimalField(max_digits=20, decimal_places=2)
+    average_price = models.DecimalField(max_digits=20, decimal_places=2)
 
     def __str__(self):
-        return f"{self.user.username} - {self.date} - {self.total_value}"
+        return f"{self.user.username} - {self.stock.symbol} ({self.quantity})"
+
+    @property
+    def total_value(self):
+        """Berekent de actuele waarde op basis van de live koers, met fallback naar inkoopwaarde."""
+        if self.stock.price is not None:
+            return self.quantity * self.stock.price
+        return self.total_cost
+
+    @property
+    def total_cost(self):
+        """Berekent de totale inkoopwaarde."""
+        return self.quantity * self.average_price   
+
+    @property
+    def profit_loss(self):
+        """Berekent winst/verlies, veilig afgeschermd als de prijs nog niet is opgehaald."""
+        if self.stock.price is not None:
+            return (self.stock.price - self.average_price) * self.quantity 
+        return Decimal('0.00')
+
+    @property
+    def profit_loss_percentage(self):
+        """Berekent het rendement in procenten."""
+        cost = self.total_cost
+        if cost == 0 or self.stock.price is None:
+            return Decimal('0.00')
+        return (self.profit_loss / cost) * Decimal('100')

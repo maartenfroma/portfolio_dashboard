@@ -14,15 +14,6 @@ class Stock(models.Model):
         return f"{self.name} ({self.symbol})"
 
 
-class UserPortfolio(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2)
-    average_price = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return f"{self.user.username} - {self.stock.symbol} - {self.quantity}"
-
 class HistoricalPrice(models.Model):
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
     date = models.DateField()
@@ -37,3 +28,17 @@ class HistoricalPrice(models.Model):
 
     def __str__(self):
         return f"{self.stock.symbol} - {self.date}" 
+
+
+class StockFundamental(models.Model):
+    ticker = models.CharField(max_length=10, unique=True)
+    pe_ratio = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    pb_ratio = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    roe = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    net_profit_margin = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) 
+    dividend_yield = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)    
+    market_cap = models.BigIntegerField(null=True, blank=True)  
+    updated_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'fundamentals: {self.ticker}'

@@ -28,7 +28,8 @@ class FinnhubService:
     def get_basic_financials(self, ticker:str)->dict:
         try:
             financials = self.client.basic_financials(symbol=ticker.upper())
-            return financials
+            metrics = financials.get('metric', {})
+            return metrics
         except Exception as e:
             print(f"Error fetching basic financials for {ticker}: {e}")
             return {}

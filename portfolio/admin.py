@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Asset, Transaction, DailyPortfolioValue
+from .models import Asset, Transaction, UserPortfolio
 
 # Register your models here.
 admin.site.register(Asset)
 admin.site.register(Transaction)
-admin.site.register(DailyPortfolioValue)
+admin.site.register(UserPortfolio)
